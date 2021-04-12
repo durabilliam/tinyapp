@@ -1,8 +1,21 @@
 const express = require("express");
 const app = express();
 const PORT = 8080;
-
+const bodyParser = require("body-parser");
+app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
+
+let generateRandomString = function() {
+  let a = "0123456789abcdefghijklmnopqrstuvwxyz";
+  let output = [];
+  for (let i = 0; i < 6; i++) {
+    let randomindex = Math.floor(Math.random() * 36) + 1;
+    console.log(randomindex);
+    let randomvalue = a.charAt(randomindex);
+    output.push(randomvalue);
+  }
+  return output.toString().replace(/,/g, '');
+};
 
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
@@ -15,14 +28,20 @@ app.get("/urls", (req,res) => {
   //Linking object to */urls_index.js
 });
 
+app.get("/urls/new", (req,res) => {
+  res.render("urls_new");
+});
+
+app.post("/urls", (req, res) => {
+  console.log(req.body);  // Log the POST request body to the console
+  res.send("Ok");         // Respond with 'Ok' (we will replace this)
+});
+
 app.get("/urls/:shortURL", (req, res) => {
   const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
   res.render("urls_show", templateVars);
   console.log(req.params)
 });
-
-
-
 
 app.get("/", (req,res) => {
   res.send("Hello!");
