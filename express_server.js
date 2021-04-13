@@ -31,6 +31,15 @@ app.get("/urls/new", (req,res) => {
   res.render("urls_new");
 });
 
+app.post("/login", (req, res) => {
+  console.log(req.body);
+  res.cookie('username', req.body.username)
+  //console.log(username);
+ 
+  res.redirect('/urls');
+
+});
+
 app.post("/urls", (req, res) => {
   console.log(req.body);
   if (req.body) {
