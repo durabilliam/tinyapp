@@ -58,6 +58,15 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 
 });
 
+app.post("/urls/:shortURL/edit", (req, res) => {
+  console.log("XXFSH", req.params, req.body);
+  console.log(urlDatabase)
+  // console.log(req.params)
+  // console.log([req.params.shortURL])
+  res.redirect(`/urls/` + req.params.shortURL);
+
+});
+
 app.get("/u/:shortURL", (req, res) => {
   if (req.body) {
     res.redirect(urlDatabase[req.params.shortURL]);
