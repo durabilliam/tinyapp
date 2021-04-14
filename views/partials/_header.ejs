@@ -1,3 +1,4 @@
+  
 <header>
   <nav class="navbar navbar-expand-md navbar-dark bg-success">
     <a class="navbar-brand" href="/urls">TinyApp</a>
@@ -8,16 +9,16 @@
       <div class="navbar-nav">
         <a class="nav-item nav-link" href="/urls">My URLs</a>
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
-        <% if (username){ %>
-        <form class="card text-center" action="/logout" method="POST">
-        <input class="form-control" type="text" name="" placeholder="username" style="width: 300px; margin: 0.5 em">
-        <button type="submit" class="btn btn-primary ">Logout</button></form>
-        <p class="card-text">Username: <%= username %></p>
+        <% if (user){ %>
+          <form class="card text-center" action="/logout" method="POST">
+          <button type="submit" class="btn btn-primary ">Logout</button></form>        
+          <p class="card-text">User Email: <%= user.email %></p>
         <% } else { %>
-        <form class="card text-center" action="/login" method="POST">
-        <input class="form-control" type="text" name="username" placeholder="username" style="width: 300px; margin: 0.5 em">
-        <button type="submit" class="btn btn-primary ">Login</button></form>
+          <form class="card text-center" action="/login" method="POST"></form>
+          <a class="nav-item nav-link" href="/login">Click here to login!</a>
+          <a class="nav-item nav-link" href="/register">Don't have an account, Click here!!</a>
         <% } %>
       </div>
     </div>
   </nav>
+
