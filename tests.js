@@ -8,8 +8,38 @@ const users = {
     id: "user2RandomID", 
     email: "user2@example.com", 
     password: "dishwasher-funk"
+  },
+  "asd":{
+    id: "asd", 
+    email: "2@3.com", 
+    password: "1234"
   }
 }
+
+const urlDatabase = {
+  b6UTxQ: { longURL: "https://www.tsn.ca", userID: "bhdg" },
+  i3BoGr: { longURL: "https://www.google.ca", userID: "aJ48lW" }
+};
+
+const urlsForUser = function(id){
+const cookieid = id
+let data ={};
+  for (let elems in urlDatabase){
+    console.log("shortURL-->", elems)
+    console.log("UserID-->", urlDatabase[elems].userID)
+    console.log("LongURL-->", urlDatabase[elems].longURL)
+    if (cookieid === urlDatabase[elems].userID){
+        console.log("UserID-->", urlDatabase[elems].userID)
+        data[elems] = urlDatabase[elems];
+    } //else {
+      //return { error: "No MAtch", data: null}
+    //}
+  } 
+  
+  return { error: null,  data}
+};
+
+console.log(urlsForUser('aJ48lW'))
 
 
 // const checkEmailAndPw = function (email, password, users) {
@@ -25,17 +55,19 @@ const users = {
 //   }
 //   return false
 // }
-const checkEmailAndPw = function (email, password, users) {
-  for (let id in users) {
-    if (password === users[id].password && email === users[id].email) {
-      console.log(password, users[id].password)
-      console.log(email, users[id].password)
-      return { error: null, data: users[id] }
-    }
-  }
-  return { error:"not found", data: null } 
-}
-console.log(checkEmailAndPw("user2@example.com", "dishwasher-funk", users))
+
+
+// const checkEmailAndPw = function (email, password, users) {
+//   for (let id in users) {
+//     if (password === users[id].password && email === users[id].email) {
+//       console.log(password, users[id].password)
+//       console.log(email, users[id].password)
+//       return { error: null, data: users[id] }
+//     }
+//   }
+//   return { error:"not found", data: null } 
+// }
+// console.log(checkEmailAndPw("user2@example.com", "dishwasher-funk", users))
 
 
 
