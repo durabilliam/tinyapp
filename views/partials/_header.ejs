@@ -12,7 +12,7 @@
         <% if (user){ %>
           <form class="card text-center" action="/logout" method="POST">
           <button type="submit" class="btn btn-primary ">Logout</button></form>        
-          <p class="card-text">User Email: <%= user.email %></p>
+          <p class="card-text">Logged in as: <%= user.email %></p>
         <% } else { %>
           <form class="card text-center" action="/login" method="POST"></form>
           <a class="nav-item nav-link" href="/login">Click here to login!</a>
