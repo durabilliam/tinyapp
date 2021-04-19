@@ -52,7 +52,7 @@ app.get("/urls", (req,res) => {
     const templateVars = { user: user || "", urls: result.data };
     res.render('urls_index', templateVars);
   } else {
-    res.redirect('/login')
+    res.redirect('/login');
   }
 });
 
@@ -128,7 +128,7 @@ app.post("/register", (req, res) => {
 });
 
 //check for user/ redirect if needed.
-//Take in users long url 
+//Take in users long url
 //genertate new shortUrl and send to it's edit page.
 app.post("/urls", (req, res) => {
   if (req.session['user_id']) {
@@ -159,16 +159,14 @@ app.post("/urls/:shortURL", (req, res) => {
   if (req.session['user_id']) {
     const userid = req.session['user_id'];
     if (userid === urlDatabase[req.params.shortURL].userID) {
-    urlDatabase[req.params.shortURL]  = {longURL: req.body.longURL, userID: userid};
-    res.redirect('/urls');
+      urlDatabase[req.params.shortURL]  = {longURL: req.body.longURL, userID: userid};
+      res.redirect('/urls');
     } else {
-    res.send("Sorry!!  Cannot alter another user's Url!!!");
+      res.send("Sorry!!  Cannot alter another user's Url!!!");
+    }
+  } else {
+    res.send("Please Login to continue");
   }
-} else {
-  res.send("Please Login to continue");
-}
-
-
 });
 
 app.get("/u/:shortURL", (req, res) => {
