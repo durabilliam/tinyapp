@@ -41,22 +41,26 @@ const users = {
   }
 };
 
+//check for user/ redirect if needed.
+//Return HTML with users urls, option to change or delete
+//link in short url for option to go to web page.
 app.get("/urls", (req,res) => {
   if (req.session['user_id']) {
     const id = req.session['user_id'];
-    const result = urlsForUser(id, urlDatabase);
     const user = fetchUserById(id, users);
+    const result = urlsForUser(id, urlDatabase);
     const templateVars = { user: user || "", urls: result.data };
     res.render('urls_index', templateVars);
   } else {
-    //res.redirect('/login')
-    res.send("Please login http://localhost:8080/login  or Register at http://localhost:8080/register");
+    res.redirect('/login')
   }
 });
 
+//check for user/ redirect if needed.
+//Return HTML with place to add new shortURL
+//link in short url for option to go to web page.
 app.get("/urls/new", (req,res) => {
   if (req.session['user_id']) {
-  //const templateVars = { user: req.cookies.id || ""};
     const id = req.session['user_id'];
     const user = fetchUserById(id, users);
     const templateVars = { user: user || ""};
@@ -66,20 +70,22 @@ app.get("/urls/new", (req,res) => {
   }
 });
 
-
+//log out user.
+//Remove cookies
 app.post("/logout", (req, res) => {
   req.session['user_id'] = null;
   res.redirect('/urls');
 });
 
+//return HTML to log in existing user
 app.get("/login", (req, res) => {
-  //console.log(req.params);
   const id = req.session['user_id'];
   const user = fetchUserById(id, users);
   const templateVars = { user: user || ""};
   res.render("urls_login", templateVars);
 });
 
+//return HTML to Register New User
 app.get("/register", (req, res) => {
   const id = req.session['user_id'];
   const user = fetchUserById(id, users);
@@ -87,10 +93,12 @@ app.get("/register", (req, res) => {
   res.render("urls_register", templateVars);
 });
 
+//check for user/ redirect if needed.
+//Check secuity- email password/
+//Send to main urls page
 app.post("/login", (req, res) => {
   const email = req.body.email;
   const password  = req.body.password;
-  //console.log("login", email, password, users);
   const result = checkEmailAndPw(email, password, users);
   if (result.error) {
     return res.send(403, "Email or Password not found");
@@ -100,6 +108,10 @@ app.post("/login", (req, res) => {
   
 });
 
+//Create user is not already registered
+//Check all fields
+//Create new userid and cookies
+//Send to main urls page
 app.post("/register", (req, res) => {
   const id = generateRandomString();
   const email = req.body.email;
@@ -115,44 +127,48 @@ app.post("/register", (req, res) => {
   }
 });
 
+//check for user/ redirect if needed.
+//Take in users long url 
+//genertate new shortUrl and send to it's edit page.
 app.post("/urls", (req, res) => {
   if (req.session['user_id']) {
-  //if (req.body) {
-    //Generates smaller Url and updates database
     const small = generateRandomString();
     const userid = req.session['user_id'];
-    urlDatabase[small]  = {longURL: ('http://') + req.body.longURL, userID: userid};
+    urlDatabase[small]  = {longURL: req.body.longURL, userID: userid};
     res.redirect('/urls/' + small);
   } else {
-    req.send("Please Login to continue");
+    res.send("Please Login to continue");
   }
 });
 
-
+//check for user/ redirect if needed.
+//user can only delete Url they own
 app.post("/urls/:shortURL/delete", (req, res) => {
   if (req.session['user_id']) {
     delete urlDatabase[req.params.shortURL];
     res.redirect('/urls');
   } else {
-    req.send("Please Login to continue");
+    res.send("Please Login to continue");
   }
 
 });
 
-
+//check for user/ redirect if needed.
+//alter url if needed and update object database.
 app.post("/urls/:shortURL", (req, res) => {
   if (req.session['user_id']) {
-  // // console.log("short:" )
-  // console.log("LOOKING", req.body.longURL);
-  // console.log("LOOKING", req.params.shortURL);
-  // console.log("----", urlDatabase)
     const userid = req.session['user_id'];
-    urlDatabase[req.params.shortURL]  = {longURL: ('http://') + req.body.longURL, userID: userid};
-    //urlDatabase[req.params.shortURL] = req.body.longURL;
+    if (userid === urlDatabase[req.params.shortURL].userID) {
+    urlDatabase[req.params.shortURL]  = {longURL: req.body.longURL, userID: userid};
     res.redirect('/urls');
-  } else {
-    req.send("Please Login to continue");
+    } else {
+    res.send("Sorry!!  Cannot alter another user's Url!!!");
   }
+} else {
+  res.send("Please Login to continue");
+}
+
+
 });
 
 app.get("/u/:shortURL", (req, res) => {
@@ -161,6 +177,8 @@ app.get("/u/:shortURL", (req, res) => {
   }
 });
 
+//send HTML of Short and LongURl
+//Option to edit is necessary
 app.get("/urls/:shortURL", (req, res) => {
   if (req.session['user_id']) {
     const id = req.session['user_id'];
@@ -168,7 +186,7 @@ app.get("/urls/:shortURL", (req, res) => {
     const templateVars = { user: user || "no url for User", shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL].longURL };
     res.render("urls_show", templateVars);
   } else {
-    res.send("Please login http://localhost:8080/login to continue");
+    res.send("Please login to continue");
   }
 });
 
